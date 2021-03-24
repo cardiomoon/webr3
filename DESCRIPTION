@@ -7,9 +7,12 @@ Authors@R: person("Keon-Woong", "Moon", role = c("aut", "cre"),
 Imports:
    PubMedWordcloud,
    pubmedR,
-   glue,
+   ggplot2,
+   ggwordcloud,
+   wordcloud,
    shiny,
-   webrSub
+   webrSub,
+   editData
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
 Description: Several analysis-related functions for the book entitled

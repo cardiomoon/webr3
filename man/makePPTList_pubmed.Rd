@@ -4,49 +4,17 @@
 \alias{makePPTList_pubmed}
 \title{Make Powerpoint list for pubmed wordcloud}
 \usage{
-makePPTList_pubmed(
-  key = "",
-  author = "",
-  start = 2000,
-  stop = 2021,
-  limit = 200,
-  seed = 1234,
-  max = 3,
-  min = 0.3,
-  min.freq = 2,
-  rot.per = 0.35,
-  palette = "",
-  no = 6
-)
+makePPTList_pubmed(query = "", seed = 1234)
 }
 \arguments{
-\item{key}{character keyword}
-
-\item{author}{name of author}
-
-\item{start}{integer start year}
-
-\item{stop}{integer stop year}
-
-\item{limit}{integer maximum number of abstracts}
+\item{query}{character query}
 
 \item{seed}{numeric seed number}
-
-\item{max}{numeric maximum size of the words}
-
-\item{min}{numeric minimum size of the words}
-
-\item{min.freq}{words with frequency below min.freq will not be plotted}
-
-\item{rot.per}{proportion words with 90 degree rotation}
-
-\item{palette}{character one of c("Accent", "Dark2", "Pastel1", "Pastel2", "Paired", "Set1", "Set2", "Set3")}
-
-\item{no}{integer number of plots}
 }
 \description{
 Make Powerpoint list for pubmed wordcloud
 }
 \examples{
-result=makePPTList_pubmed(author="Moon KW")
+query=makeQuery(key="machine learning")
+result=makePPTList_pubmed(query=query)
 }

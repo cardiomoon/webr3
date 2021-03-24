@@ -5,8 +5,8 @@
 #' @param stop integer stop year
 #' @export
 #' @examples
-#' makeQuery(author="Moon KW")
-#' makeQuery(key="machine learning")
+#' makeQuery(key="",author="Moon KW")
+#' makeQuery(key="machine learning",author="")
 makeQuery=function(key="",author="",start=2000,stop=2021){
         #key="stomach ca";author="Moon KW";start=2000;stop=2021
         temp=c()
@@ -33,42 +33,66 @@ query2clean=function(query,limit=200){
     PubMedWordcloud::cleanAbstracts(M$AB)
 }
 
-#' Make Powerpoint list for pubmed wordcloud
-#' @param key character keyword
-#' @param author name of author
-#' @param start integer start year
-#' @param stop integer stop year
-#' @param limit integer maximum number of abstracts
-#' @param seed numeric seed number
-#' @param max numeric maximum size of the words
-#' @param min numeric minimum size of the words
-#' @param min.freq words with frequency below min.freq will not be plotted
-#' @param rot.per proportion words with 90 degree rotation
-#' @param palette character one of c("Accent", "Dark2", "Pastel1", "Pastel2", "Paired", "Set1", "Set2", "Set3")
-#' @param no integer number of plots
-#' @importFrom glue glue
+
+#' Make Wordcloud
+#' @param df A data.frame
+#' @param type integer
+#' @param seed integer
+#' @param ... further arguments
+#' @importFrom PubMedWordcloud plotWordCloud
+#' @importFrom wordcloud wordcloud
+#' @importFrom ggplot2 ggplot aes_string theme_minimal scale_size_area
+#' @importFrom ggwordcloud geom_text_wordcloud_area ggwordcloud ggwordcloud2
 #' @export
 #' @examples
-#' result=makePPTList_pubmed(author="Moon KW")
-makePPTList_pubmed=function(key="",author="",start=2000,stop=2021,limit=200,seed=1234,
-                            max=3,min=0.3,min.freq=2,rot.per=0.35,palette="",no=6){
+#' query=makeQuery(key="machine learning")
+#' df<-query2clean(query)
+#' plotWC(df)
+plotWC=function(df,type=1,seed=1234,...){
 
-     title=c("Make Query","Total count","Make Clean Data","Set seed")
-     type=c("Pre","Rcode","Rcode","Rcode")
-     code=c(glue('query<-makeQuery(key="{key}",author="{author}",start={start},stop={stop})'),
+    df$color=factor(sample.int(10, nrow(df), replace = TRUE))
+    df2<-df[1:100,]
+    pal=c("#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E","#E6AB02","#A6761D","#666666")
+    set.seed(seed)
+    if(type==1) {
+        plotWordCloud(df,...)
+    } else if(type==2){
+    wordcloud(df2$word,df2$freq,rot.per=0.35,random.order = FALSE,colors=pal,...)
+    } else if(type==3){
+        ggplot(df2,aes_string(label="word",size="freq"))+
+        geom_text_wordcloud_area(eccentricity = 0.35,...)+
+        scale_size_area(max_size=10)+
+        theme_minimal()
+    } else if(type==4){
+    ggplot(df2,aes_string(label="word",size="freq",color = "color"))+
+        geom_text_wordcloud_area(eccentricity = 0.35,...)+
+        scale_size_area(max_size=10)+
+        theme_minimal()
+    }else if(type==5){
+    ggwordcloud(df2$word,df2$freq,rot.per=0.35,random.order = FALSE,colors=pal,...)
+    } else {
+    ggwordcloud2(df2,shape="circle",...)
+    }
+}
+
+#' Make Powerpoint list for pubmed wordcloud
+#' @param query character query
+#' @param seed numeric seed number
+#' @importFrom pubmedR pmQueryTotalCount
+#' @export
+#' @examples
+#' query=makeQuery(key="machine learning")
+#' result=makePPTList_pubmed(query=query)
+makePPTList_pubmed=function(query="",seed=1234){
+
+     title=c("Query","Total count","Make Clean Data","plot1","plot2","plot3","plot4","plot5","plot6")
+     type=c("Rcode","Rcode","Rcode","plot","plot","ggplot","ggplot","ggplot","ggplot")
+     code=c(paste0("query<-'",query,"';query"),
             "pmQueryTotalCount(query)",
-            glue('df<-query2clean(query,limit={limit});head(df,10)'),
-            glue('set.seed({seed})'))
-     for(i in 1:no){
-             title=c(title,paste0("plot",i))
-             type=c(type,"plot")
-     if(palette=="") {
-             temp=glue('plotWordCloud(df,scale=c({max},{min}),min.freq={min.freq},rot.per={rot.per})')
-     } else{
-             temp=glue('plotWordCloud(df,scale=c({max},{min}),min.freq={min.freq},colors=colSets("{palette}"),rot.per={rot.per})')
-     }
-     code=c(code,temp)
-     }
+            'df<-query2clean(query,limit=200);head(df,10)',
+            paste0("plotWC(df,type=",1:6,",seed=",seed,")"))
      data.frame(title,type,code)
 }
+
+
 

@@ -13,7 +13,10 @@ shinyUI(fluidPage(
     navbarPage( "Web-R.org",
                 tabPanel("PubMedWordcloud",
                          pubmedModuleInput("pubmed")),
-
+                tabPanel("PPTxList",
+                         pptxListInput("List1"),icon=icon("shopping-cart")),
+                tabPanel("Citation",
+                         citationModuleInput("citation")),
                 id='main',
                 theme=shinytheme("cerulean")
     ),

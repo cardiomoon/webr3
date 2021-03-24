@@ -15,11 +15,12 @@ pubmedModuleInput=function(id){
 #' @param output output
 #' @param session session
 #' @param PPTdata PPTdata
-#' @importFrom shiny selectInput checkboxInput reactiveValues req
-#' @importFrom shiny textInput tagList hr fluidRow updateCheckboxInput
-#' @importFrom shiny callModule numericInput conditionalPanel
+#' @importFrom shiny selectInput checkboxInput reactiveValues req updateNumericInput wellPanel
+#' @importFrom shiny textInput tagList hr fluidRow updateCheckboxInput updateTextInput
+#' @importFrom shiny callModule numericInput conditionalPanel actionButton br
 #' @importFrom shiny observe observeEvent reactive renderUI verbatimTextOutput renderPrint
-#' @importFrom webrSub dynamicShowData dynamicShowDataUI
+#' @importFrom webrSub dynamicShowData dynamicShowDataUI myp
+#' @importFrom editData numericInput3 textInput3 selectInput3
 #' @export
 pubmedModule=function(input,output,session,PPTdata){
 
@@ -27,13 +28,13 @@ pubmedModule=function(input,output,session,PPTdata){
 
      savedPPT=reactiveValues(type=c(),title=c(),code=c())
 
+     RV=reactiveValues()
+
      observeEvent(PPTdata(),{
           savedPPT$type<-PPTdata()$type
           savedPPT$title<-PPTdata()$title
           savedPPT$code<-PPTdata()$code
      })
-
-     data=reactive({ df() })
 
 
      resultdf=reactive({
@@ -46,61 +47,74 @@ pubmedModule=function(input,output,session,PPTdata){
 
 output$pubmedModule=renderUI({
      tagList(
-          fluidRow(
-               textInput(ns("key"),"keyword",value=""),
-               textInput(ns("author"),"author",value=""),
-               numericInput(ns("start"),"startYear",value=2000),
-               numericInput(ns("stop"),"endYear",value=2021),
-               numericInput(ns("seed"),"seed",value=1234),
-               numericInput(ns("limit"),"maximum number of abstract",value=200),
-               numericInput(ns("max"),"maximum size of text",value=3),
-               numericInput(ns("min"),"minimum size of text",value=0.3),
-               numericInput(ns("min.freq"),"minimum frequwncy of words to be plotted",value=2),
-               numericInput(ns("rot.per"),"proportion words with 90 degree rotation",value=0.35),
-               selectInput(ns("palette"),"palette",choices=c("Accent", "Dark2", "Pastel1", "Pastel2", "Paired", "Set1", "Set2", "Set3"),
-                           selected="Dark2"),
-               numericInput(ns("no"),"number of plots to make",value=6),
-               verbatimTextOutput(ns("text"))
-          ),
-          conditionalPanel("true==true",
-                           checkboxInput(ns("plotOK"),"plotOK",value=FALSE),
-                           conditionalPanel(condition=sprintf("input[['%s']]==true",ns("plotOK")),
+
+              myp("Enter keyword and/or author to make query and press `make Query` button. "),
+               wellPanel(
+               textInput(ns("key"),"keyword(e.g. machine learning)",value="",width="240px"),
+               textInput(ns("author"),"author(e.g. Moon KW)",value="",width="240px"),
+               numericInput3(ns("start"),"startYear",value=2000,width=120),
+               numericInput3(ns("stop"),"endYear",value=2021,width=120)
+               ),
+
+               actionButton(ns("makeQuery"),"make Query"),
+               actionButton(ns("reset"),"reset"),
+          hr(),
+               textInput(ns("query"),"query",value="",width="300px"),
+               verbatimTextOutput(ns("text")),
+               numericInput3(ns("seed"),"seed",value=1234),
+               hr(),
+
+
+          conditionalPanel("true==false",
+                           checkboxInput(ns("plotOK"),"plotOK",value=FALSE)),
+          conditionalPanel(condition=sprintf("input[['%s']]==true",ns("plotOK")),
                                             tagList(
+                                              myp("Press `PubMedWordcloud` button to make plots."),
 
                                               dynamicShowDataUI(ns("dynamicShowData"))
 
                                             )
-                           )
-                           )
+
+           )
+
      )
 })
 
 
 output$text=renderPrint({
     if(input$plotOK){
-    df=makepubmedPPT()
-    df
+      pmQueryTotalCount(input$query)
     }
-})
-
-observe({
-     mode=0
-     if(req(input$key)!="") mode=1
-     if(req(input$author)!="") mode=1
-      updateCheckboxInput(session,"plotOK",value=ifelse(mode==1,TRUE,FALSE))
 
 })
 
+
+observeEvent(input$makeQuery,{
+
+      temp=makeQuery(key=input$key,author=input$author,start=input$start,stop=input$stop)
+      updateTextInput(session,"query",value=temp)
+      updateCheckboxInput(session,"plotOK",value=TRUE)
+      # count=pmQueryTotalCount(input$query)$total_count
+      # updateNumericInput(session,"count",value=count)
+
+
+})
+
+observeEvent(input$reset,{
+     updateTextInput(session,"key",value="")
+     updateTextInput(session,"author",value="")
+     updateNumericInput(session,"start",value=2000)
+     updateNumericInput(session,"stop",value=2021)
+     updateTextInput(session,"query",value="")
+     updateCheckboxInput(session,"plotOK",value=FALSE)
+})
 
 makepubmedPPT=function(){
 
 
-    makePPTList_pubmed(key=input$key,author=input$author,
-                       start=input$start,stop=input$stop,
-                       limit=input$limit,seed=input$seed,max=input$max,min=input$min,
-                       min.freq=input$min.freq,rot.per=input$rot.per,
-                       palette=input$palette,no=input$no)
-  # makePPTList_pubmed(key=input$key,author=input$author)
+    makePPTList_pubmed(query=input$query,
+                      seed=input$seed)
+
 
 }
 

@@ -19,6 +19,6 @@ makeQuery(key = "", author = "", start = 2000, stop = 2021)
 Make query with keyword
 }
 \examples{
-makeQuery(author="Moon KW")
-makeQuery(key="machine learning")
+makeQuery(key="",author="Moon KW")
+makeQuery(key="machine learning",author="")
 }
