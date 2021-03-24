@@ -10,9 +10,6 @@ Imports:
    ggplot2,
    ggwordcloud,
    wordcloud,
-   shiny,
-   webrSub,
-   editData
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
 Description: Several analysis-related functions for the book entitled
