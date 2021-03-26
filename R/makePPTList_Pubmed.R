@@ -85,12 +85,13 @@ plotWC=function(df,type=1,seed=1234,...){
 #' result=makePPTList_pubmed(query=query)
 makePPTList_pubmed=function(query="",seed=1234){
 
-     title=c("Query","Total count","Make Clean Data","head of data","plot1","plot2","plot3","plot4","plot5","plot6")
-     type=c("Rcode","Rcode","out","Rcode","plot","plot","ggplot","ggplot","ggplot","ggplot")
-     code=c(paste0("query<-'",query,"';query"),
-            "pmQueryTotalCount(query)",
-            "out<-query2clean(query,limit=200)","head(out,10)",
-            paste0("plotWC(out,type=",1:6,",seed=",seed,")"))
+     title=c("Query","Get Query count","Query count","Make Clean Data","head of data","plot1","plot2","plot3","plot4","plot5","plot6")
+     type=c("Rcode","out","Rcode","out","Rcode","plot","plot","ggplot","ggplot","ggplot","ggplot")
+     code=c(paste0("query<-'",query,"'"),
+            "queryCount<-pmQueryTotalCount(query)",
+            "queryCount",
+            "queryResult<-query2clean(query,limit=200)","head(queryResult,10)",
+            paste0("plotWC(queryResult,type=",1:6,",seed=",seed,")"))
      data.frame(title,type,code)
 }
 
