@@ -1,4 +1,5 @@
 #  http://www.cultureplex.ca/wp-content/uploads/2018/01/1-s2.0-S1751157717300500-main.pdf
+# https://github.com/massimoaria/bibliometrix
 
 library(bibliometrix)
 
