@@ -57,6 +57,18 @@ df2clean=function(M){
     PubMedWordcloud::cleanAbstracts(M$AB)
 }
 
+#' retrieve pubmed data from query and make clean data
+#' @param query character
+#' @export
+#' @examples
+#' query=makeQuery(key="propensity score")
+#' query2clean(query)
+query2clean=function(query){
+    D <-query2metaData(query)
+    M=pmApi2df(D,format="raw")
+    PubMedWordcloud::cleanAbstracts(M$AB)
+}
+
 #' Make Wordcloud
 #' @param df A data.frame
 #' @param type integer
