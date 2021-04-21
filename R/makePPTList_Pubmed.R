@@ -5,7 +5,7 @@
 #' @param stop integer stop year
 #' @export
 #' @examples
-#' makeQuery(key="",author="Moon KW")
+#' query=makeQuery(key="",author="Moon KW")
 #' makeQuery(key="machine learning",author="")
 makeQuery=function(key="",author="",start=2000,stop=2021){
         #key="stomach ca";author="Moon KW";start=2000;stop=2021
@@ -18,21 +18,44 @@ makeQuery=function(key="",author="",start=2000,stop=2021){
 }
 
 
-#' Make clean data from query
+#' retrieve pubmed data from query
 #' @param query character
 #' @param limit integer
-#' @importFrom pubmedR pmApiRequest pmApi2df
-#' @importFrom PubMedWordcloud cleanAbstracts
+#' @export
+#' @examples
+#' query=makeQuery(key="propensity score")
+#' D <-query2metaData(query)
+query2metaData=function(query,limit=200){
+    D <- myPmApiRequest(query = query, limit = limit, api_key = NULL)
+    D
+
+}
+
+
+#' Convert xml PubMed bibliographic data into a dataframe
+#' @param D is a list following the xml PubMed structure, downloaded using the function pmApiRequest.
+#' @param removeNoAbstract logical whether or not remove data with no abstract
+#' @param addPMC logical wheter or not add PMCID
+#' @importFrom pubmedR pmApi2df
 #' @export
 #' @examples
 #' query=makeQuery(key="machine learning")
-#' query2clean(query)
-query2clean=function(query,limit=200){
-    D <- pmApiRequest(query = query, limit = limit, api_key = NULL)
+#' D <-query2metaData(query)
+#' M <- metaData2df(D)
+metaData2df=function(D,removeNoAbstract=TRUE,addPMC=FALSE){
     M=pmApi2df(D,format="raw")
-    PubMedWordcloud::cleanAbstracts(M$AB)
+    if(removeNoAbstract) M=M[M$AB!="NA",]
+    if(addPMC) M<-addPMC(M)
+    M
 }
 
+#' clean data
+#' @param M A data.frame
+#' @importFrom PubMedWordcloud cleanAbstracts
+#' @export
+df2clean=function(M){
+    PubMedWordcloud::cleanAbstracts(M$AB)
+}
 
 #' Make Wordcloud
 #' @param df A data.frame
@@ -46,7 +69,9 @@ query2clean=function(query,limit=200){
 #' @export
 #' @examples
 #' query=makeQuery(key="machine learning")
-#' df<-query2clean(query)
+#' D<-query2metaData(query)
+#' M<-metaData2df(D)
+#' df=df2clean(M)
 #' plotWC(df)
 plotWC=function(df,type=1,seed=1234,...){
 
@@ -85,12 +110,12 @@ plotWC=function(df,type=1,seed=1234,...){
 #' result=makePPTList_pubmed(query=query)
 makePPTList_pubmed=function(query="",seed=1234){
 
-     title=c("Query","Get Query count","Query count","Make Clean Data","head of data","plot1","plot2","plot3","plot4")
-     type=c("Rcode","out","Rcode","out","Rcode","plot","plot","ggplot","ggplot")
+     title=c("Query","Get Query count","Query count","Get data from pubmed","Make Clean Data","head of data","plot1","plot2","plot3","plot4")
+     type=c("Rcode","out","Rcode","out","out","Rcode","plot","plot","ggplot","ggplot")
      code=c(paste0("query<-'",query,"'"),
             "queryCount<-pmQueryTotalCount(query)",
             "queryCount",
-            "queryResult<-query2clean(query,limit=200)","head(queryResult,10)",
+            "M<-query2df(query,limit=200)","queryResult<-df2clean(M)","head(queryResult,10)",
             paste0("plotWC(queryResult,type=",c(1,2,5,6),",seed=",seed,")"))
      data.frame(title,type,code)
 }

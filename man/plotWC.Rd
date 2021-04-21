@@ -20,6 +20,8 @@ Make Wordcloud
 }
 \examples{
 query=makeQuery(key="machine learning")
-df<-query2clean(query)
+D<-query2metaData(query)
+M<-metaData2df(D)
+df=df2clean(M)
 plotWC(df)
 }

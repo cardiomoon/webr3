@@ -1,7 +1,7 @@
 Package: webr3
 Type: Package
 Title: Data and Functions for Web-Based Analysis
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Keon-Woong", "Moon", role = c("aut", "cre"),
                      email = "cardiomoon@gmail.com")
 Imports:
@@ -10,6 +10,10 @@ Imports:
    ggplot2,
    ggwordcloud,
    wordcloud,
+   httr,
+   XML,
+   rentrez,
+   shiny
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
 Description: Several analysis-related functions for the book entitled
