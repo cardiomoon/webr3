@@ -83,7 +83,7 @@ L$AuthorProd
 A <- cocMatrix(M, Field = "DE", sep = ";")
 
 NetMatrix <- biblioNetwork (M, analysis = "coupling", network = "references", sep = ";")
-net <- networkPlot(NetMatrix, n = 30, type = "kamada", Title = "References",labelsize=0.5)
+networkPlot(NetMatrix, n = 30, type = "kamada", Title = "References",labelsize=0.7)
 str(net)
 net
 
@@ -91,7 +91,7 @@ net
 
 NetMatrix <- biblioNetwork(M, analysis = "collaboration",
                            network = "authors", sep = ";")
-net <- networkPlot(NetMatrix, n = 30, type = "kamada", Title = "Collaboration",labelsize=0.5)
+net <- networkPlot(NetMatrix, n = 30, type = "kamada", Title = "Collaboration",labelsize=0.7)
 
 ## Co-citation analysis
 
