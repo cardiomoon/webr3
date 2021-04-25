@@ -10,6 +10,7 @@ pmid2pmc=function(pmids){
     service_root="https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/"
     pmidAddress="https://pubmed.ncbi.nlm.nih.gov/"
     PMCAddress="https://www.ncbi.nlm.nih.gov/pmc/articles/"
+    doiAddress="https://doi.org/"
 
     # df=PMCids[match(pmids,PMCids$PMID),]
     # df$PDF=NA
@@ -48,12 +49,14 @@ pmid2pmc=function(pmids){
             df=rbind(df,temp)
         }
     }
+    df
     df=df[1:3]
     df$PDF=NA
     df$PDF[!is.na(df$PMCID)]=paste0('<a href="',PMCAddress,df$PMCID[!is.na(df$PMCID)],'/pdf" target="_blank">PDF</a>')
     df$PMID=paste0('<a href="',pmidAddress,df$PMID,'" target="_blank">',df$PMID,"</a>")
     # df$PMID=paste0('<a href="',pmidAddress,pmids,'" target="_blank">',pmids,"</a>")
     df$PMCID[!is.na(df$PMCID)]=paste0('<a href="',PMCAddress,df$PMCID[!is.na(df$PMCID)],'" target="_blank">',df$PMCID[!is.na(df$PMCID)],"</a>")
+    df$DOI[!is.na(df$DOI)]=paste0('<a href="',doiAddress,df$DOI[!is.na(df$DOI)],'" target="_blank">',df$DOI[!is.na(df$DOI)],"</a>")
     df
 }
 
