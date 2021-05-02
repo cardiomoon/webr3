@@ -13,7 +13,17 @@ Imports:
    XML,
    rentrez,
    shiny,
-   httr
+   httr,
+   bibliometrix,
+   Matrix,
+   dplyr,
+   tidyr,
+   ggrepel,
+   ggthemes,
+   igraph,
+   networkD3,
+   rlang,
+   glue
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
 Description: Several analysis-related functions for the book entitled
