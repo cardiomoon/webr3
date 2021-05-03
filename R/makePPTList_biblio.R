@@ -106,7 +106,7 @@ countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2){
                                      color = "firebrick4", size = .data$count, group=.data$continent.x),
                    curvature = 0.33,
                    alpha = 0.5) +
-        labs(title = "Country Collaboration Map", x = "Latitude", y = "Longitude")+
+        labs(x = "Latitude", y = "Longitude")+
         scale_size_continuous(guide = FALSE, range = c(0.25, edgesize))+
         theme(text = element_text(color = '#333333')
               ,plot.title = element_text(size = 28)
@@ -266,7 +266,7 @@ hindexSource=function(M,k=20){
 #'@param xname character Name of x-axis variable
 #'@param yname character Name of y-axis variable
 #'@param digits integer indicating the number of decimal places
-#'@importFrom ggplot2 geom_segment geom_label geom_text
+#'@importFrom ggplot2 geom_col geom_text
 #'@importFrom ggthemes theme_clean
 #'@importFrom stats na.omit reorder
 #'@export
@@ -579,7 +579,7 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
         title=c(title,"Top Author's Production over the time")
         type=c(type,"ggplot")
-        code=c(code,"topAU <- authorProdOverTime(M, k = 20, graph = FALSE);topAU$graph+ggtitle('')")
+        code=c(code,"topAU <- authorProdOverTime(M, k = 20, graph = FALSE);removeGeoms(topAU$graph,geoms='GeomCustomAnn')+ggtitle('')")
 
     }
 
@@ -621,6 +621,11 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
         title=c(title,"Average Article Citations")
         type=c(type,"ggplot")
         code=c(code,"myCLEplot(sumResult[[8]],x=3)")
+
+        title=c(title,"Country Scientific Production")
+        type=c(type,"ggplot")
+        code=c(code,"mapworld(M)")
+
 
     }
 
@@ -745,7 +750,7 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
 
     title=c(title,"Country Collaboration Map")
     type=c(type,"ggplot")
-    code=c(code,'countrycollaboration(M)')
+    code=c(code,'countrycollaboration(M)$g')
 
     title=c(title,"Co-Citation Plot")
     type=c(type,"out")
@@ -772,6 +777,10 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
     type=c(type,rep("ggplot",4))
     code=c(code,paste0("removeGeoms(CS[[",4:7,"]])"))
 
+
+    title=c(title,"Historical Direct Citation Network")
+    type=c(type,"ggplot")
+    code=c(code,"histPlot(histNetwork(M),verbose=FALSE)$g+ggtitle('')")
     result=data.frame(title,type,code)
     result
 
@@ -868,11 +877,11 @@ cocPlot=function(M,fields="ID",n=50,seed=1234,...){
     if(fields=="TI") {
         M=termExtraction(M,Field="TI",verbose=FALSE)
         network="titles"
-        title="Title Words network"
+        title="Title Words Network"
     } else if(fields=="AB") {
         M=termExtraction(M,Field="TI",verbose=FALSE)
         network="abstracts"
-        title="Abstract Words network"
+        title="Abstract Words Network"
     } else if(fields=="ID"){
         network="keywords"
         title="Keywords Plus Network"
