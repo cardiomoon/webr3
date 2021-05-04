@@ -410,7 +410,8 @@ TrendTopics <- function(M,terms="ID",...){
 
 
 #' Make Powerpoint List with biblio data
-#' @param filepath character file path
+#' @param filepath file path
+#' @param k numeric
 #' @param all logical
 #' @param main logical
 #' @param sources logical
@@ -420,7 +421,7 @@ TrendTopics <- function(M,terms="ID",...){
 #' @param documents logical
 #' @param keywords logical
 #' @export
-makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
+makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
 
 
     if(all==TRUE){
@@ -433,17 +434,17 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
         keywords=TRUE
     }
 
-    title=c("Data","Bibliometric Analysis")
+    title=c("data","Bibliometric Analysis")
     type=c("out","out")
     code=c(paste0("M<-readRDS('",filepath,"')"),"results<-biblioAnalysis(M)")
 
     title=c(title,"Summary")
     type=c(type,"out")
-    code=c(code,"sumResult<-summary(results,k=20,verbose=FALSE)")
+    code=c(code,paste0("sumResult<-summary(results,k=",k,",verbose=FALSE)"))
 
     title=c(title,"Plot summary")
     type=c(type,"Rcode")
-    code=c(code,"plotlist<-plot(results,k=20)")
+    code=c(code,paste0("plotlist<-plot(results,k=",k,")"))
 
     if(main==TRUE){
 
@@ -489,17 +490,13 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
         type=c(type,"ggplot")
         code=c(code,"myCLEplot(sumResult[[9]])")
 
-        title=c(title,"")
-        type=c(type,"input")
-        code=c(code,"numericInput('k1','Number of sources',value=20)")
-
         title=c(title,"Most Locally Cited Source")
         type=c(type,"data2")
-        code=c(code,"MLCSources(M,k={input$k1})")
+        code=c(code,paste0("MLCSources(M,k=",k,")"))
 
         title=c(title,"Most Locally Cited Source")
         type=c(type,"ggplot")
-        code=c(code,"myCLEplot(MLCSources(M,k={input$k1}))")
+        code=c(code,paste0("myCLEplot(MLCSources(M,k=",k,"))"))
 
         title=c(title,"","")
         type=c(type,"input","input")
@@ -513,13 +510,9 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
         type=c(type,"ggplot")
         code=c(code,"sourceGrowthPlot(M,top={input$top},cdf={input$cumulative})")
 
-        title=c(title,"")
-        type=c(type,"input")
-        code=c(code,"numericInput('k','number of sources',value=20)")
-
         title=c(title,"Source Local Impact")
         type=c(type,"data2")
-        code=c(code,"hindexSource(M,k={input$k})")
+        code=c(code,paste0("hindexSource(M,k=",k,")"))
 
         title=c(title,"")
         type=c(type,"input")
@@ -527,7 +520,7 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
         title=c(title,"Source Local Impact")
         type=c(type,"ggplot")
-        code=c(code,'myCLEplot(hindexSource(M,k={input$k}),y=1,x={input$xname})')
+        code=c(code,paste0('myCLEplot(hindexSource(M,k=',k,'),y=1,x={input$xname})'))
     }
 
     ## Authors
@@ -543,31 +536,27 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
         title=c(title,"most frequent first authors")
         type=c(type,"data2")
-        code=c(code,"data.frame(citations(M, field = 'author')$Cited[1:10])")
+        code=c(code,paste0("data.frame(citations(M, field = 'author')$Cited[1:",k,"])"))
 
         title=c(title,"most frequent first authors")
         type=c(type,"ggplot")
-        code=c(code,"myCLEplot(data.frame(citations(M, field = 'author')$Cited[1:10]))")
+        code=c(code,paste0("myCLEplot(data.frame(citations(M, field = 'author')$Cited[1:",k,"]))"))
 
         title=c(title,"most local cited authors")
         type=c(type,"data2")
-        code=c(code,"localCitations(M)$Authors[1:10,]")
+        code=c(code,paste0("localCitations(M)$Authors[1:",k,",]"))
 
         title=c(title,"most local cited authors")
         type=c(type,"ggplot")
-        code=c(code,"myCLEplot(localCitations(M)$Authors[1:10,])")
-
-        title=c(title,"")
-        type=c(type,"input")
-        code=c(code,"numericInput('k2','Number of sources',value=20)")
+        code=c(code,paste0("myCLEplot(localCitations(M)$Authors[1:",k,",])"))
 
         title=c(title,"Authors' Dominance ranking")
         type=c(type,"data2")
-        code=c(code,"dominance(results, k = {input$k2})")
+        code=c(code, paste0("dominance(results, k =",k,")"))
 
         title=c(title,"Author Impact")
         type=c(type,"data2")
-        code=c(code,"hindexAuthor(M,results,k={input$k2})")
+        code=c(code,paste0("hindexAuthor(M,results,k=",k,")"))
 
         title=c(title,"")
         type=c(type,"input")
@@ -575,28 +564,24 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
         title=c(title,"Source Local Impact")
         type=c(type,"ggplot")
-        code=c(code,'myCLEplot(hindexAuthor(M,results,k={input$k2}),y=1,x={input$xname2})')
+        code=c(code,paste0('myCLEplot(hindexAuthor(M,results,k=',k,'),y=1,x={input$xname2})'))
 
         title=c(title,"Top Author's Production over the time")
         type=c(type,"ggplot")
-        code=c(code,"topAU <- authorProdOverTime(M, k = 20, graph = FALSE);removeGeoms(topAU$graph,geoms='GeomCustomAnn')+ggtitle('')")
+        code=c(code,paste0("topAU <- authorProdOverTime(M, k = ",k,", graph = FALSE);removeGeoms(topAU$graph,geoms='GeomCustomAnn')+ggtitle('')"))
 
     }
 
     ## Affiliations
     if(affiliations==TRUE){
 
-        title=c(title,"")
-        type=c(type,"input")
-        code=c(code,"numericInput('k3','Number of sources',value=20)")
-
         title=c(title,"Most Relevant Affiliations")
         type=c(type,"data2")
-        code=c(code,"data.frame(results$Affiliations[1:{input$k3}])")
+        code=c(code,paste0("data.frame(results$Affiliations[1:",k,"])"))
 
         title=c(title,"Most Relevant Affiliations")
         type=c(type,"ggplot")
-        code=c(code,"myCLEplot(data.frame(results$Affiliations[1:{input$k3}]))")
+        code=c(code,paste0("myCLEplot(data.frame(results$Affiliations[1:",k,"]))"))
     }
 
     ## Country
@@ -659,13 +644,9 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
     if(keywords==TRUE){
 
-        title=c(title,"")
-        type=c(type,"input")
-        code=c(code,"numericInput('k4','Number of sources',value=20)")
-
         title=c(title,"Most Relevant Keywords")
         type=c(type,"data2")
-        code=c(code,"wordCount(M,k={input$k4})")
+        code=c(code,paste0("wordCount(M,k=",k,")"))
 
         title=c(title,"")
         type=c(type,"input")
@@ -673,14 +654,24 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
         title=c(title,"Most Relevant Keywords")
         type=c(type,"ggplot")
-        code=c(code,"myCLEplot(wordCount(M,k={input$k4}),y={input$xname5}-1,x={input$xname5})")
+        code=c(code,paste0("myCLEplot(wordCount(M,k=",k,"),y={input$xname5}-1,x={input$xname5})"))
+
+        title=c(title,"word cloud")
+        type=c(type,"plot")
+        code=c(code,"plotWC1(M)")
+
+        title=c(title,"Tree Map")
+        type=c(type,"ggplot")
+        code=c(code,"treeMap(M)")
+
 
         title=c(title,"","","")
         type=c(type,rep("input",3))
         code=c(code,
-               "selectInput3('terms','terms',choices=c('Keywords-Plus'='ID','Author Keywords'='DE','Title'='TI','Abstract'='AB'),selected='ID',width=200)",
+               "pickerInput3('terms','terms',choices=c('Keywords-Plus'='ID','Author Keywords'='DE','Title'='TI','Abstract'='AB'),selected='ID',width=200)",
                "numericInput3('top','keyword numbers',min=1,max=50,value=10)",
                "checkboxInput3('cdf','cumulative',value=TRUE)")
+
 
         title=c(title,"Word Dynamic")
         type=c(type,"data2")
@@ -694,9 +685,9 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
         title=c(title,"","","")
         type=c(type,rep("input",3))
         code=c(code,
-               "selectInput('terms2','terms',choices=c('Keywords-Plus'='ID','Author Keywords'='DE','Title'='TI','Abstract'='AB'),selected='ID',width=200)",
-               "numericInput('min.freq','min frequency of the items to include',min=1,max=10,value=2)",
-               "numericInput('n.items','maximum number of items per year',min=1,max=50,value=5)")
+               "pickerInput3('terms2','terms',choices=c('Keywords-Plus'='ID','Author Keywords'='DE','Title'='TI','Abstract'='AB'),selected='ID',width=200)",
+               "numericInput3('min.freq','min frequency of the items to include',min=1,max=10,value=2,width=250)",
+               "numericInput3('n.items','maximum number of items per year',min=1,max=50,value=5,width=250)")
 
 
         title=c(title,"Trend Topics")
@@ -716,7 +707,7 @@ makePPTList_biblio=function(filepath,all=FALSE,main=FALSE,sources=FALSE,authors=
 
 
 #' Make second Powerpoint List with biblio data
-#' @param filepath character file path
+#' @param filepath file path
 #' @param field1 Character to be passed to collaboPlot
 #' @param n1 numeric to be passed to collaboPlot
 #' @param seed1 numeric random seed to be passed to collaboPlot
@@ -739,6 +730,12 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
     title="Data"
     type="out"
     code=paste0("M<-readRDS('",filepath,"')")
+
+    # title="Data"
+    # type="out"
+    # code=paste0("M<-RV$M")
+
+    # title<-type<-code<-c()
 
     title=c(title,"Collaboration Plot")
     type=c(type,"out")
@@ -780,7 +777,7 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
 
     title=c(title,"Historical Direct Citation Network")
     type=c(type,"ggplot")
-    code=c(code,"histPlot(histNetwork(M),verbose=FALSE)$g+ggtitle('')")
+    code=c(code,"histPlot(histNetwork(M),size=4,labelsize=3,verbose=FALSE)$g+ggtitle('')")
     result=data.frame(title,type,code)
     result
 

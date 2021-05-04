@@ -21,7 +21,7 @@ makePPTList_biblio2(
 )
 }
 \arguments{
-\item{filepath}{character file path}
+\item{filepath}{file path}
 
 \item{field1}{Character to be passed to collaboPlot}
 

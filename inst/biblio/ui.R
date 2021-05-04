@@ -4,6 +4,7 @@ library(webrSub)
 library(shinythemes)
 library(shinycssloaders)
 library(rrtable)
+library(visNetwork)
 
 options(spinner.size=1, spinner.type=5)
 
@@ -21,6 +22,14 @@ shinyUI(fluidPage(
                          uiOutput("Analysis1")),
                 tabPanel("Analysis2",
                          uiOutput("Analysis2")),
+                navbarMenu("Anlaysis3",
+                           tabPanel("wordCloud",
+                                    uiOutput("wordCloud")),
+                           tabPanel("Three-Fields Plot",
+                                    uiOutput("threeFieldsPlot")),
+                           tabPanel("Thematic Evolution",
+                                    uiOutput("themaEvol"))
+                ),
                 tabPanel("PPTxList",
                          pptxListInput("List1"),icon=icon("shopping-cart")),
                 tabPanel("Citation",

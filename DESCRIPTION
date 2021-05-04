@@ -23,7 +23,8 @@ Imports:
    igraph,
    networkD3,
    rlang,
-   glue
+   glue,
+   treemapify
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
 Description: Several analysis-related functions for the book entitled

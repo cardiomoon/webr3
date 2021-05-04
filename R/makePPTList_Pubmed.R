@@ -88,7 +88,7 @@ query2clean=function(query){
 plotWC=function(df,type=1,seed=1234,...){
 
     df$color=factor(sample.int(10, nrow(df), replace = TRUE))
-    df2<-df[1:100,]
+    df2<-df[1:min(nrow(df),100),]
     pal=c("#1B9E77","#D95F02","#7570B3","#E7298A","#66A61E","#E6AB02","#A6761D","#666666")
     set.seed(seed)
     if(type==1) {

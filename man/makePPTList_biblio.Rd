@@ -6,6 +6,7 @@
 \usage{
 makePPTList_biblio(
   filepath,
+  k = 20,
   all = FALSE,
   main = FALSE,
   sources = FALSE,
@@ -17,7 +18,9 @@ makePPTList_biblio(
 )
 }
 \arguments{
-\item{filepath}{character file path}
+\item{filepath}{file path}
+
+\item{k}{numeric}
 
 \item{all}{logical}
 
