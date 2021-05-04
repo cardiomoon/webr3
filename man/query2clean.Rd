@@ -13,6 +13,8 @@ query2clean(query)
 retrieve pubmed data from query and make clean data
 }
 \examples{
+\dontrun{
 query=makeQuery(key="propensity score")
 query2clean(query)
+}
 }

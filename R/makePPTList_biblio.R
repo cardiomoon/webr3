@@ -777,7 +777,7 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
 
     title=c(title,"Historical Direct Citation Network")
     type=c(type,"ggplot")
-    code=c(code,"histPlot(histNetwork(M),size=4,labelsize=3,verbose=FALSE)$g+ggtitle('')")
+    code=c(code,"removeGeoms(histPlot(histNetwork(M),size=4,labelsize=3,verbose=FALSE)$g,geoms='GeomCustomAnn')+ggtitle('')")
     result=data.frame(title,type,code)
     result
 

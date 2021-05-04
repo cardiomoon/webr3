@@ -1,3 +1,5 @@
+Sys.setenv('_R_CHECK_SYSTEM_CLOCK_' = 0)
+
 #' Make query with keyword
 #' @param key character keyword
 #' @param author name of author
@@ -61,8 +63,10 @@ df2clean=function(M){
 #' @param query character
 #' @export
 #' @examples
+#' \dontrun{
 #' query=makeQuery(key="propensity score")
 #' query2clean(query)
+#' }
 query2clean=function(query){
     D <-query2metaData(query)
     M=pmApi2df(D,format="raw")
