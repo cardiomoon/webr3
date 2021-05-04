@@ -1,0 +1,13 @@
+name: biblio
+title: biblio
+username:
+account: cardiomoon
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4075118
+bundleId: 4554262
+url: https://cardiomoon.shinyapps.io/biblio/
+when: 1620112519.85315
+lastSyncTime: 1620112519.85316
+asMultiple: FALSE
+asStatic: FALSE

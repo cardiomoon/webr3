@@ -10,6 +10,9 @@ library(ggplot2)
 library(grid)
 library(editData)
 library(plotly)
+library(networkD3)
+library(ggplot2)
+library(treemapify)
 
 
 shinyServer(function(input,output,session){

@@ -5,7 +5,9 @@ library(shinythemes)
 library(shinycssloaders)
 library(rrtable)
 library(visNetwork)
+library(maps)
 
+options(shiny.sanitize.errors = FALSE)
 options(spinner.size=1, spinner.type=5)
 
 shinyUI(fluidPage(
