@@ -1,7 +1,7 @@
 Package: webr3
 Type: Package
 Title: Data and Functions for Web-Based Analysis
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: person("Keon-Woong", "Moon", role = c("aut", "cre"),
                      email = "cardiomoon@gmail.com")
 Imports:
