@@ -132,61 +132,6 @@ countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2){
     return(results)
 }
 
-#' Draw threeFiledsPlot with proprocessinf data
-#' @param M is a data frame obtained by the converting function convert2df and modified with modifyBiblioData
-#' @param fields is a character vector. It indicates the fields to analyze using the standard WoS field tags.
-#' @param n	is a integer vector. It indicates how many items to plot, for each of the three fields. Default is n = c(20, 20, 20)
-#' @param width is an integer. It indicates the plot width (in pixel). Default is width=1200.
-#' @param  height is an integer. It indicates the plot height (in pixel). Default is height=600.
-#' @importFrom bibliometrix cocMatrix
-#' @importFrom Matrix crossprod
-#' @importFrom networkD3 sankeyNetwork
-#' @export
-myThreeFieldsPlot=function (M, fields = c("AU", "DE", "SO"), n = c(20, 20, 20),
-                            width = 1200, height = 600)
-{
-    Binary = rep(FALSE, 3)
-    ind = which(fields %in% "CR")
-    if (length(ind) > 0)
-        Binary[ind] = TRUE
-    WL = cocMatrix(M, fields[1], binary = Binary[1], n = n[1])
-    n1 = min(n[1], ncol(WL))
-    TopL <- colnames(WL)
-    WM = cocMatrix(M, fields[2], binary = Binary[2], n = n[2])
-    n2 = min(n[2], ncol(WM))
-    TopM <- colnames(WM)
-    WR = cocMatrix(M, fields[3], binary = Binary[3], n = n[3])
-    n3 = min(n[3], ncol(WR))
-    TopR <- colnames(WR)
-    LM = Matrix::crossprod(WL, WM)
-    MR = Matrix::crossprod(WM, WR)
-    row.names(LM) = 1:n1
-    colnames(LM) = row.names(MR) = (n1 + 1):(n2 + n1)
-    colnames(MR) = (n2 + n1 + 1):(n1 + n2 + n3)
-    LMm = meltx(as.matrix(LM))
-    LMm$group = NA
-    MRm = meltx(as.matrix(MR))
-    MRm$group = NA
-    Edges = rbind(LMm, MRm)
-    Edges$Var1 <- as.numeric(Edges$Var1)
-    Edges$Var2 <- as.numeric(Edges$Var2)
-    names(Edges) = c("from", "to", "Value", "group")
-    Edges$from = Edges$from - 1
-    Edges$to = Edges$to - 1
-    Nodes = tolower(c(TopL, TopM, TopR))
-    Nodes = data.frame(Nodes = Nodes, group = Nodes, stringsAsFactors = FALSE)
-    min.flow = 1
-    names(Edges)[3] = "weight"
-    Edges = Edges[Edges$weight >= min.flow, ]
-    ind = which(!((0:(sum(n) - 1)) %in% c(Edges$from, Edges$to)))
-    Nodes[ind, ] = c("", "")
-    networkD3::sankeyNetwork(Links = Edges, Nodes = Nodes, Source = "from",
-                             Target = "to", NodeID = "Nodes", Value = "weight", width = width,
-                             height = height, fontSize = 12, nodeWidth = 30, NodeGroup = "group",
-                             LinkGroup = "group")
-}
-
-
 #' Citation table
 #'@param  x result of biblioSummary
 #'@importFrom stats aggregate

@@ -15,6 +15,7 @@ Imports:
    shiny,
    httr,
    bibliometrix,
+   bibliometrixData,
    Matrix,
    dplyr,
    tidyr,
@@ -24,6 +25,7 @@ Imports:
    networkD3,
    rlang,
    glue,
+   riverplot,
    treemapify
 URL: https://github.com/cardiomoon/webr3
 BugReports: https://github.com/cardiomoon/webr3/issues
