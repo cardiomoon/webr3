@@ -273,19 +273,17 @@ locCit=function(M,k=20){
 }
 #' Keywords Count
 #' @param M is a data frame obtained by the converting function convert2df and modified with modifyBiblioData
+#'@param terms One of c("ID","DE","TI","AB")
 #' @param k numeric
 #' @export
-wordCount=function(M,k=100){
+wordCount=function(M,terms="ID",k=20){
     fields=c("ID","DE","TI","AB")
+    select=grep(terms,fields)
     fieldnames=c("Keywords-Plus","Author_Keywords","Title","Abstract")
     for(i in seq_along(fields)){
-        temp=data.frame(tableTag(M,fields[i])[1:k])
-        colnames(temp)[1]=fieldnames[i]
-        if(i==1) {
-            df=temp
-        }else{
-            df=cbind(df,temp)
-        }
+        temp=data.frame(tableTag(M,terms)[1:k])
+        colnames(temp)[1]=fieldnames[select]
+        df=temp
     }
     df
 }
@@ -355,7 +353,7 @@ TrendTopics <- function(M,terms="ID",...){
 
 
 #' Make Powerpoint List with biblio data
-#' @param filepath file path
+#' @param M is a bibliographic data frame obtained by the converting function convert2df.
 #' @param k numeric
 #' @param all logical
 #' @param main logical
@@ -366,7 +364,7 @@ TrendTopics <- function(M,terms="ID",...){
 #' @param documents logical
 #' @param keywords logical
 #' @export
-makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
+makePPTList_biblio=function(M,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
 
 
     if(all==TRUE){
@@ -379,9 +377,10 @@ makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,aut
         keywords=TRUE
     }
 
+
     title=c("data","Bibliometric Analysis")
     type=c("out","out")
-    code=c(paste0("M<-readRDS('",filepath,"')"),"results<-biblioAnalysis(M)")
+    code=c("M<-M","results<-biblioAnalysis(M)")
 
     title=c(title,"Summary")
     type=c(type,"out")
@@ -589,17 +588,17 @@ makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,aut
 
     if(keywords==TRUE){
 
-        title=c(title,"Most Relevant Keywords")
-        type=c(type,"data2")
-        code=c(code,paste0("wordCount(M,k=",k,")"))
-
         title=c(title,"")
         type=c(type,"input")
-        code=c(code,"selectInput('xname5','Measure',choices=c('Keywords-Plus'=2,'Author Keywords'=4,'Title'=6,'Abstract'=8),selected=2)")
+        code=c(code,"selectInput('xname5','field',choices=c('Keywords-Plus'='ID','Author Keywords'='DE'),selected='ID')")
+
+        title=c(title,"Most Relevant Keywords")
+        type=c(type,"data2")
+        code=c(code,paste0('wordCount(M,terms="{input$xname5}",k=',k,')'))
 
         title=c(title,"Most Relevant Keywords")
         type=c(type,"ggplot")
-        code=c(code,paste0("myCLEplot(wordCount(M,k=",k,"),y={input$xname5}-1,x={input$xname5})"))
+        code=c(code,paste0('myCLEplot(wordCount(M,terms="{input$xname5}",k=',k,'))'))
 
         title=c(title,"word cloud")
         type=c(type,"plot")
@@ -652,7 +651,7 @@ makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,aut
 
 
 #' Make second Powerpoint List with biblio data
-#' @param filepath file path
+#' @param M is a bibliographic data frame obtained by the converting function convert2df.
 #' @param field1 Character to be passed to collaboPlot
 #' @param n1 numeric to be passed to collaboPlot
 #' @param seed1 numeric random seed to be passed to collaboPlot
@@ -667,18 +666,23 @@ makePPTList_biblio=function(filepath,k=20,all=FALSE,main=FALSE,sources=FALSE,aut
 #' @param minDegree numeric minimum occurrences of terms to analize and plot.
 #' @importFrom glue glue
 #' @export
-makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
+makePPTList_biblio2=function(M,field1="Authors",n1=50,seed1=1234,
                              field2="Authors",n2=50,seed2=1234,
                              field3="ID",n3=50,seed3=1234,
                              method="MCA",field4="ID",minDegree=40){
 
-    title="Data"
-    type="out"
-    code=paste0("M<-readRDS('",filepath,"')")
-
+    #title<-type<-code<-c()
     # title="Data"
     # type="out"
-    # code=paste0("M<-RV$M")
+    # code=paste0("M<-readRDS('",filepath,"')")
+
+    title="Data"
+    type="out"
+    code="M<-M"
+
+    # title=c(title,"Rcode")
+    # type=c(type,"Rcode")
+    # code=c(code,"str(M)")
 
     # title<-type<-code<-c()
 
@@ -719,10 +723,13 @@ makePPTList_biblio2=function(filepath,field1="Authors",n1=50,seed1=1234,
     type=c(type,rep("ggplot",4))
     code=c(code,paste0("removeGeoms(CS[[",4:7,"]])"))
 
-
-    title=c(title,"Historical Direct Citation Network")
-    type=c(type,"ggplot")
-    code=c(code,"removeGeoms(histPlot(histNetwork(M),size=4,labelsize=3,verbose=FALSE)$g,geoms='GeomCustomAnn')+ggtitle('')")
+    # title=c(title,"Historical Direct Citation Network")
+    # type=c(type,"out")
+    # code=c(code,"p4<-removeGeoms(histPlot(histNetwork(M),size=4,labelsize=3,verbose=FALSE)$g,geoms='GeomCustomAnn')+ggtitle('')")
+    #
+    # title=c(title,"Historical Direct Citation Network")
+    # type=c(type,"ggplot")
+    # code=c(code,"print(p4)")
     result=data.frame(title,type,code)
     result
 

@@ -4,10 +4,12 @@
 \alias{wordCount}
 \title{Keywords Count}
 \usage{
-wordCount(M, k = 100)
+wordCount(M, terms = "ID", k = 20)
 }
 \arguments{
 \item{M}{is a data frame obtained by the converting function convert2df and modified with modifyBiblioData}
+
+\item{terms}{One of c("ID","DE","TI","AB")}
 
 \item{k}{numeric}
 }

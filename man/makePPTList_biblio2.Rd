@@ -5,7 +5,7 @@
 \title{Make second Powerpoint List with biblio data}
 \usage{
 makePPTList_biblio2(
-  filepath,
+  M,
   field1 = "Authors",
   n1 = 50,
   seed1 = 1234,
@@ -21,7 +21,7 @@ makePPTList_biblio2(
 )
 }
 \arguments{
-\item{filepath}{file path}
+\item{M}{is a bibliographic data frame obtained by the converting function convert2df.}
 
 \item{field1}{Character to be passed to collaboPlot}
 
