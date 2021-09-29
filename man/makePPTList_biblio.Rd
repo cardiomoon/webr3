@@ -5,6 +5,7 @@
 \title{Make Powerpoint List with biblio data}
 \usage{
 makePPTList_biblio(
+  dataname = "",
   M,
   k = 20,
   all = FALSE,
@@ -18,6 +19,8 @@ makePPTList_biblio(
 )
 }
 \arguments{
+\item{dataname}{data name}
+
 \item{M}{is a bibliographic data frame obtained by the converting function convert2df.}
 
 \item{k}{numeric}

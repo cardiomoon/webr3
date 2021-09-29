@@ -353,6 +353,7 @@ TrendTopics <- function(M,terms="ID",...){
 
 
 #' Make Powerpoint List with biblio data
+#' @param dataname data name
 #' @param M is a bibliographic data frame obtained by the converting function convert2df.
 #' @param k numeric
 #' @param all logical
@@ -364,7 +365,7 @@ TrendTopics <- function(M,terms="ID",...){
 #' @param documents logical
 #' @param keywords logical
 #' @export
-makePPTList_biblio=function(M,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
+makePPTList_biblio=function(dataname="",M,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FALSE,affiliations=FALSE,country=FALSE,documents=FALSE,keywords=FALSE){
 
 
     if(all==TRUE){
@@ -377,10 +378,17 @@ makePPTList_biblio=function(M,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FA
         keywords=TRUE
     }
 
+    title<-code<-type<-c()
 
-    title=c("data","Bibliometric Analysis")
-    type=c("out","out")
-    code=c("M<-M","results<-biblioAnalysis(M)")
+    if(dataname!=""){
+    title=c("data")
+    type=c("out")
+    code=paste0("M<-myReadRDS('",dataname,"',id='DI')")
+    }
+
+    title=c(title,"Bibliometric Analysis")
+    type=c(type,"out")
+    code=c(code,"results<-biblioAnalysis(M)")
 
     title=c(title,"Summary")
     type=c(type,"out")
@@ -401,6 +409,10 @@ makePPTList_biblio=function(M,k=20,all=FALSE,main=FALSE,sources=FALSE,authors=FA
         title=c(title,"Annual Scientific Production")
         type=c(type,"data2")
         code=c(code,"sumResult[[3]]")
+
+        title=c(title,"Annual Scientific Production")
+        type=c(type,"Rcode")
+        code=c(code,"webr::cox.stuart.test(sumResult[[3]]$Articles)")
 
         title=c(title,"Annual Scientific Production")
         type=c(type,"ggplot")
