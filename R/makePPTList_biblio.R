@@ -69,9 +69,9 @@ count.duplicates <- function(DF){
 #' @importFrom stats quantile
 #' @importFrom utils data
 #' @export
-countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2){
+countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2,log=TRUE,guidefill=FALSE){
     M=metaTagExtraction(M,"AU_CO")
-
+    #label=FALSE;edgesize=2.5;min.edges=2;log=TRUE;guidefill=FALSE
     net=biblioNetwork(M,analysis="collaboration",network="countries")
     CO=data.frame(Tab=rownames(net),Freq=Matrix::diag(net),stringsAsFactors = FALSE)
     bsk.network=igraph::graph_from_adjacency_matrix(net,mode="undirected")
@@ -97,17 +97,28 @@ countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2){
     tab=COedges
     COedges=COedges[COedges$count>=min.edges,]
 
-    g=ggplot(country.prod, aes( x = .data$long, y = .data$lat, group = .data$group )) +
-        geom_polygon(aes_string(fill = "log(Freq)")) +
         scale_fill_continuous(low='dodgerblue', high='dodgerblue4',breaks=breaks)+
-        #guides(fill = guide_legend(reverse = T)) +
-        guides(colour=FALSE, fill=FALSE)+
+    g=ggplot(country.prod, aes( x = .data$long, y = .data$lat, group = .data$group ))
+    if(log) {
+        g=g+geom_polygon(aes_string(fill = "log(Freq)"))
+    } else{
+        g=g+geom_polygon(aes_string(fill = "Freq"))
+    }
+
+    if(guidefill) {
+        g=g+scale_fill_continuous(low='dodgerblue', high='darkblue')+
+            guides(colour="none",fill = guide_legend(reverse = T))
+    } else{
+        g=g+scale_fill_continuous(low='dodgerblue', high='dodgerblue4',breaks=breaks)+
+          guides(colour="none", fill="none")
+    }
+    g=g+
         geom_curve(data=COedges, aes(x = .data$Longitude.x , y = .data$Latitude.x, xend = .data$Longitude.y, yend = .data$Latitude.y,     # draw edges as arcs
                                      color = "firebrick4", size = .data$count, group=.data$continent.x),
                    curvature = 0.33,
                    alpha = 0.5) +
         labs(x = "Latitude", y = "Longitude")+
-        scale_size_continuous(guide = FALSE, range = c(0.25, edgesize))+
+        scale_size_continuous(guide = "none", range = c(0.25, edgesize))+
         theme(text = element_text(color = '#333333')
               ,plot.title = element_text(size = 28)
               ,plot.subtitle = element_text(size = 14)

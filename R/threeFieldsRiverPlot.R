@@ -32,7 +32,8 @@ threeFieldsRiverPlot=function(res,nodewidth=3,textcex=0.7,...){
     style <- sapply(ID, function(id)
         list(col=color1[id]), simplify=FALSE)
     r <- makeRiver(nodes=nodes1, edges=edges1,styles=style)
-    riverplot(r, plot_area=c(1,0.9), nodewidth=nodewidth, srt=0, textcex=textcex,gravity="c",edgecol="lightgray")
+    riverplot(r, plot_area=c(1,0.9), nodewidth=nodewidth, srt=0, textcex=textcex,gravity="c",edgecol="lightgray",
+              usr=c(0,1,1,0),...)
     group=unique(as.character(res$x$layoutAttrs[[2]][[1]]$text))
     text(0,1,group[1],pos=4)
     text(1,1,group[3],pos=2)
