@@ -97,7 +97,6 @@ countrycollaboration <- function(M,label=FALSE,edgesize=2.5,min.edges=2,log=TRUE
     tab=COedges
     COedges=COedges[COedges$count>=min.edges,]
 
-        scale_fill_continuous(low='dodgerblue', high='dodgerblue4',breaks=breaks)+
     g=ggplot(country.prod, aes( x = .data$long, y = .data$lat, group = .data$group ))
     if(log) {
         g=g+geom_polygon(aes_string(fill = "log(Freq)"))
