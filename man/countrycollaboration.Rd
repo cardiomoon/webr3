@@ -4,7 +4,14 @@
 \alias{countrycollaboration}
 \title{Make a world map plot}
 \usage{
-countrycollaboration(M, label = FALSE, edgesize = 2.5, min.edges = 2)
+countrycollaboration(
+  M,
+  label = FALSE,
+  edgesize = 2.5,
+  min.edges = 2,
+  log = TRUE,
+  guidefill = FALSE
+)
 }
 \arguments{
 \item{M}{is a bibliographic data frame obtained by the converting function convert2df.}

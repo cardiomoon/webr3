@@ -4,7 +4,7 @@
 \alias{count.duplicates}
 \title{count dupicates}
 \usage{
-count.duplicates(DF)
+\method{count}{duplicates}(DF)
 }
 \arguments{
 \item{DF}{A data.frame}
